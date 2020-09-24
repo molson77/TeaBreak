@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TeaBreak</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_feature">TODO: Add Tea Profile</string>
+    <string name="name_label">Name:</string>
+    <string name="type_label">Type:</string>
+    <string name="origin_label">Origin:</string>
+    <string name="brew_label">BREW</string>
+    <string name="ammt_label">Amount of tea leaves per 8oz water:</string>
+    <string name="temp_label">Steeping temp (Fahrenheit):</string>
+    <string name="time_label">Steeping time (minutes):</string>
+</resources>

@@ -63,10 +63,10 @@ class TeaAdapter(val context: Context, val teas: ArrayList<TeaItem>): RecyclerVi
         holder.temp.text = tea.temp.toString() + "\u2109"
 
         holder.brew.setOnClickListener {
-            val intent = Intent(AlarmClock.ACTION_SET_ALARM).apply {
-                putExtra(AlarmClock.EXTRA_MINUTES, tea.time)
+            val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {
+                putExtra(AlarmClock.EXTRA_LENGTH, (tea.time * 60))
             }
-            startActivity(context, intent, null)
+            holder.itemView.context.startActivity(intent, null)
             Toast.makeText(context,
                 "Timer set for " + tea.time + " minutes.",
                 Toast.LENGTH_LONG).show()

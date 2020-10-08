@@ -16,13 +16,20 @@ import kotlinx.android.synthetic.main.tea_item.view.tea_temp
 import kotlinx.android.synthetic.main.tea_item.view.tea_type
 
 
-// TeaAdapter:
-//
-// This file uses and ArrayList of TeaItem objects to populate a Recyclerview.
-// A ViewHolder is defined and cycled for each item in the database and is used
-// to fill in the fields in each TeaItem's CardView.
+/**
+ * TeaAdapter:
+ *
+ * @desc This class uses and ArrayList of TeaItem objects to populate a RecyclerView.
+ * A ViewHolder is defined and cycled for each item in the database and is used
+ * to fill in the fields in each TeaItem's CardView.
+ *
+ * @property context context of the MainActivity
+ * @property teas an ArrayList of TeaItems this class uses to populate each CardView
+ */
 
-class TeaAdapter(val context: Context, val teas: ArrayList<TeaItem>): RecyclerView.Adapter<TeaAdapter.ViewHolder>() {
+class TeaAdapter(private val context: Context,
+                 private val teas: ArrayList<TeaItem>):
+    RecyclerView.Adapter<TeaAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val name = itemView.tea_name
@@ -34,24 +41,37 @@ class TeaAdapter(val context: Context, val teas: ArrayList<TeaItem>): RecyclerVi
         val delete = itemView.delete_button
     }
 
-
-    // onCreateViewHolder: ViewHolder - inflates and returns the ViewHolder
+    /**
+     * onCreateViewHolder:
+     * @desc inflates and returns the ViewHolder
+     * @param parent
+     * @param viewType
+     * @return ViewHolder
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.tea_item,parent,false)
         return ViewHolder(v)
     }
 
 
-    // getItemCount: Int - returns the size of the teas ArrayList
+    /**
+     * getItemCount:
+     * @desc returns the size of the teas ArrayList
+     * @return Int
+     */
     override fun getItemCount(): Int {
         return teas.size
     }
 
 
-    // onBindViewHolder: Void - binds all of the fields in the ViewHolder to the data associated
-    //                          with the tea at the given position in the ArrayList, also binds
-    //                          the brew timer button and and the button that triggers deletion
-
+    /**
+     * onBindViewHolder:
+     * @desc binds all of the fields in the ViewHolder to the data associated
+     * with the tea at the given position in the ArrayList, also binds
+     * the brew and delete buttons
+     * @param holder ViewHolder to be bound
+     * @param position position in the teas ArrayList
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val tea: TeaItem = teas[position]

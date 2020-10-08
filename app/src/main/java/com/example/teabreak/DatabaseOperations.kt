@@ -9,11 +9,13 @@ import android.widget.Toast
 import com.example.teabreak.DatabaseInfo.TableInfo
 
 
-// Database Operations:
-//
-// This file handles the execution of the creation and deletion queries for the database,
-// along with the creation and deletion of the individual tea entries within the database.
-// Includes a function to return all teas in the database in the form of an ArrayList
+/**
+ * DatabaseOperations: "dbOps"
+ *
+ * @desc This file handles the execution of the creation and deletion queries for the SQLite
+ * database, along with the creation and deletion of the individual tea entries within the database.
+ * Includes a function to return all teas in the database in the form of an ArrayList
+ */
 
 class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -22,6 +24,7 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
         const val DATABASE_VERSION = 1
     }
 
+    /* Executes the database creation query */
     override fun onCreate(db: SQLiteDatabase?) {
         db!!.execSQL(DatabaseInfo.CREATE_TABLE_QUERY)
     }
@@ -32,8 +35,17 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
     }
 
 
-    // addTea: Void - adds a tea entry to the database
-
+    /**
+     * addTea:
+     * @desc adds a tea to the SQLite database.  Puts all values into a ContentValues object,
+     * then uses this object to insert a new row into the database
+     * @param name
+     * @param type
+     * @param origin
+     * @param amount
+     * @param temp
+     * @param time
+     */
     fun addTea(context: Context, name: String, type: String, origin: String, amount: String, temp: Int, time: Int) {
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -54,14 +66,19 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
     }
 
 
-    // deleteTea: Boolean - deletes a tea entry from the database, returns result of deletion
-
+    /**
+     * deleteTea:
+     * @desc deletes a tea from the SQLite database by row ID
+     * @param context context passed from the TeaAdapter
+     * @param teaID the ID of the tea to be deleted
+     * @return Boolean - whether the operation was successful or not
+     */
     fun deleteTea(context: Context, teaID: Int): Boolean {
         val query = "DELETE FROM ${TableInfo.TABLE_NAME} WHERE ${BaseColumns._ID} = $teaID"
         val db = this.writableDatabase
         var result = false
         try {
-            val cursor = db.execSQL(query)
+            db.execSQL(query)
             result = true
         } catch(e: Exception) {
             Toast.makeText(context, "deleteTea failed", Toast.LENGTH_SHORT).show()
@@ -71,12 +88,16 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
     }
 
 
-    // getTeas: ArrayList<TeaItem> - scrapes the database and returns all teas, including ID column
-
+    /**
+     * getTeas:
+     * @desc scrapes the database and returns all teas, including ID column
+     * @param context context passed from the MainActivity
+     * @return ArrayList<TeaItem>
+     */
     fun getTeas(context: Context): ArrayList<TeaItem> {
         val query = "SELECT * FROM " + TableInfo.TABLE_NAME
         val db = this.readableDatabase
-        val Teas = ArrayList<TeaItem>()
+        val teas = ArrayList<TeaItem>()
 
         val cursor = db.rawQuery(query, null)
 
@@ -93,12 +114,12 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
                     cursor.getInt(cursor.getColumnIndex(TableInfo.COLUMN_TEA_TEMP)),
                     cursor.getInt(cursor.getColumnIndex(TableInfo.COLUMN_TEA_TIME))
                 )
-                Teas.add(tea)
+                teas.add(tea)
             }
         }
         cursor.close()
         db.close()
-        return Teas
+        return teas
     }
 
 }

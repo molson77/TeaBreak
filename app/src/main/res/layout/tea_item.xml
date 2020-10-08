@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="10dp"
-    android:layout_marginVertical="5dp"
+    android:layout_marginTop="0dp"
     card_view:cardBackgroundColor="#FFFFFF"
-    card_view:cardCornerRadius="10dp"
-    card_view:cardElevation="5dp">
+    card_view:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -103,8 +102,11 @@
 
             <ImageButton
                 android:id="@+id/delete_button"
+                style="@android:style/Widget.ImageButton"
                 android:layout_width="50dp"
                 android:layout_height="49dp"
+                android:background="#FFFFFF"
+                android:scaleType="center"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toStartOf="@+id/brew_button"
                 card_view:layout_constraintTop_toTopOf="parent"
@@ -112,12 +114,13 @@
 
             <Button
                 android:id="@+id/brew_button"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="64dp"
                 android:layout_height="49dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/brew_label"
                 android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent" />

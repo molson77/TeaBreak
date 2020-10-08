@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    /* property used to retrieve the list of TeaItems from the SQLite database */
     companion object {
         lateinit var dbOps: DatabaseOperations
     }
@@ -20,51 +21,45 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        // creates DatabaseOperations object for database manipulation
         dbOps = DatabaseOperations(this)
-
-        // onClickListener for Adding Teas
-        fab.setOnClickListener {
-            val intent = Intent(this, AddTeaActivity::class.java)
-            startActivity(intent)
-        }
 
         viewTeas()
     }
 
+    /* Inflates the Action Bar menu */
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 
-    // viewTeas: Void - facilitates the integration of the RecyclerView and the TeaAdapter
-    //                  to display the teas in the database.
+    /* Functionality for Action Bar menu */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_add -> {
+                val intent = Intent(this, AddTeaActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> false
+        }
+    }
+
+    /**
+     * viewTeas:
+     * @desc facilitates the integration of the RecyclerView and
+     * the TeaAdapter to display the teas in the database.
+     * Links the CardSpacingItemDecoration
+     */
 
     private fun viewTeas() {
         val teaList = dbOps.getTeas(this)
         val adapter = TeaAdapter(this, teaList)
         val rv: RecyclerView = findViewById(R.id.recyclerView)
-
-        // linking the layoutManager to the recyclerView
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         rv.layoutManager = layoutManager
-        // setting the custom adapter for the cardView tea items in the recyclerView
         rv.adapter = adapter
+        rv.addItemDecoration(CardSpacingItemDecoration(20))
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
 
 }

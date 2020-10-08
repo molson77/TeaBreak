@@ -3,8 +3,11 @@ package com.example.teabreak
 import android.provider.BaseColumns
 
 
-// DatabaseInfo:
-// This file defines the database creation query, deletion query, and schema.
+/**
+ * DatabaseInfo:
+ *
+ * @desc This file defines the SQLite database creation query, deletion query, and schema.
+ */
 
 object DatabaseInfo {
 

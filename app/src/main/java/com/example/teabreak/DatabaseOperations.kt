@@ -41,17 +41,15 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
      * then uses this object to insert a new row into the database
      * @param name
      * @param type
-     * @param origin
      * @param amount
      * @param temp
      * @param time
      */
-    fun addTea(context: Context, name: String, type: String, origin: String, amount: String, temp: Int, time: Int) {
+    fun addTea(context: Context, name: String, type: String, amount: String, temp: Int, time: Int) {
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(TableInfo.COLUMN_TEA_NAME, name)
         cv.put(TableInfo.COLUMN_TEA_TYPE, type)
-        cv.put(TableInfo.COLUMN_TEA_ORIGIN, origin)
         cv.put(TableInfo.COLUMN_TEA_AMOUNT, amount)
         cv.put(TableInfo.COLUMN_TEA_TEMP, temp)
         cv.put(TableInfo.COLUMN_TEA_TIME, time)
@@ -109,10 +107,10 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
                     cursor.getInt(cursor.getColumnIndex(BaseColumns._ID)),
                     cursor.getString(cursor.getColumnIndex(TableInfo.COLUMN_TEA_NAME)),
                     cursor.getString(cursor.getColumnIndex(TableInfo.COLUMN_TEA_TYPE)),
-                    cursor.getString(cursor.getColumnIndex(TableInfo.COLUMN_TEA_ORIGIN)),
                     cursor.getString(cursor.getColumnIndex(TableInfo.COLUMN_TEA_AMOUNT)),
                     cursor.getInt(cursor.getColumnIndex(TableInfo.COLUMN_TEA_TEMP)),
-                    cursor.getInt(cursor.getColumnIndex(TableInfo.COLUMN_TEA_TIME))
+                    cursor.getInt(cursor.getColumnIndex(TableInfo.COLUMN_TEA_TIME)),
+                    cursor.getBlob(cursor.getColumnIndex(TableInfo.COLUMN_TEA_IMAGE))
                 )
                 teas.add(tea)
             }

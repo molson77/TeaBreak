@@ -75,6 +75,8 @@ class AddTeaActivity : AppCompatActivity() {
             }
         }
 
+        // TODO: Add image selection functionality
+
         /* Binding add button */
 
         val button = findViewById<Button>(R.id.add_button)
@@ -91,7 +93,6 @@ class AddTeaActivity : AppCompatActivity() {
                 dbOps.addTea(this,
                     name.text.toString(),
                     selectedType,
-                    origin.text.toString(),
                     amount.text.toString() + " " + selectedMeasurement,
                     (temp.text.toString()).toInt(),
                     (time.text.toString()).toInt())

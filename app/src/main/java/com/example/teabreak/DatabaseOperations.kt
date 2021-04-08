@@ -15,13 +15,15 @@ import com.example.teabreak.DatabaseInfo.TableInfo
  * @desc This file handles the execution of the creation and deletion queries for the SQLite
  * database, along with the creation and deletion of the individual tea entries within the database.
  * Includes a function to return all teas in the database in the form of an ArrayList
+ *
+ * @param context
  */
 
 class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         const val DATABASE_NAME = "TeaItems.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
     }
 
     /* Executes the database creation query */
@@ -45,7 +47,7 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
      * @param temp
      * @param time
      */
-    fun addTea(context: Context, name: String, type: String, amount: String, temp: Int, time: Int) {
+    fun addTea(context: Context, name: String, type: String, amount: String, temp: Int, time: Int, image: ByteArray) {
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(TableInfo.COLUMN_TEA_NAME, name)
@@ -53,6 +55,7 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
         cv.put(TableInfo.COLUMN_TEA_AMOUNT, amount)
         cv.put(TableInfo.COLUMN_TEA_TEMP, temp)
         cv.put(TableInfo.COLUMN_TEA_TIME, time)
+        cv.put(TableInfo.COLUMN_TEA_IMAGE, image)
 
         try {
             db.insert(TableInfo.TABLE_NAME, null, cv)

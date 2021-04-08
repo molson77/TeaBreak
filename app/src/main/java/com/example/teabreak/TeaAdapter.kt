@@ -1,20 +1,19 @@
 package com.example.teabreak
 
+
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.provider.AlarmClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.tea_item.view.*
-import kotlinx.android.synthetic.main.tea_item.view.tea_name
-import kotlinx.android.synthetic.main.tea_item.view.tea_temp
-import kotlinx.android.synthetic.main.tea_item.view.tea_type
 
 
 /**
@@ -40,6 +39,7 @@ class TeaAdapter(private val context: Context,
         private val tempTextView: TextView = itemView.findViewById(R.id.tea_temp)
         private val amountTextView: TextView = itemView.findViewById(R.id.tea_amount)
         private val timeTextView: TextView = itemView.findViewById(R.id.tea_time)
+        private val teaImageView: ImageView = itemView.findViewById(R.id.tea_image)
         private val brew: Button = itemView.findViewById(R.id.brew_button)
 
         init {
@@ -54,6 +54,8 @@ class TeaAdapter(private val context: Context,
             amountTextView.text = tea.amount
             tempTextView.text = tea.temp.toString() + "\u2109"
             timeTextView.text = tea.time.toString() + ":00"
+
+            teaImageView.setImageBitmap(BitmapFactory.decodeByteArray(tea.img, 0, tea.img.size))
 
             brew.setOnClickListener {
                 val intent = Intent(AlarmClock.ACTION_SET_TIMER).apply {

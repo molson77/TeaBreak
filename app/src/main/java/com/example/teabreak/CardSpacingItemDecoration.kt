@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
  * CardSpacingItemDecoration:
  *
  * @desc Class that sets the spacing between the CardViews displayed in the RecyclerView.
- *
  * @property vSpace the uniform vertical space between the
  * CardViews and the top/bottom of the RecyclerView
  */

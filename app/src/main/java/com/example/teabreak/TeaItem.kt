@@ -18,7 +18,6 @@ class TeaItem(
     private val id: Int,
     var name: String,
     var type: String,
-    // var origin: String,
     var amount: String,
     var temp: Int,
     var time: Int,

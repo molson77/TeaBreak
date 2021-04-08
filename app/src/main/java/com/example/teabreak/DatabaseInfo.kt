@@ -19,9 +19,9 @@ object DatabaseInfo {
         "${TableInfo.COLUMN_TEA_AMOUNT} TEXT," +
         "${TableInfo.COLUMN_TEA_TEMP} INTEGER," +
         "${TableInfo.COLUMN_TEA_TIME} INTEGER," +
-        "${TableInfo.COLUMN_TEA_IMAGE} BLOB)"
+        "${TableInfo.COLUMN_TEA_IMAGE} BLOB);"
 
-    const val DROP_TABLE_QUERY = "DROP TABLE IF EXISTS ${TableInfo.TABLE_NAME}"
+    const val DROP_TABLE_QUERY = "DROP TABLE IF EXISTS ${TableInfo.TABLE_NAME};"
 
     object TableInfo: BaseColumns {
         const val TABLE_NAME = "teaTable"

@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import android.util.Log
 import android.widget.Toast
 import com.example.teabreak.DatabaseInfo.TableInfo
 
@@ -100,7 +101,12 @@ class DatabaseOperations(context: Context): SQLiteOpenHelper(context, DATABASE_N
         val db = this.readableDatabase
         val teas = ArrayList<TeaItem>()
 
+        //db!!.execSQL(DatabaseInfo.DROP_TABLE_QUERY)
+        //Log.i("DB", "DROPPED TABLE")
+
+        Log.i("DB", "BEFORE FETCH")
         val cursor = db.rawQuery(query, null)
+        Log.i("DB", "AFTER FETCH")
 
         if (cursor.count == 0){
             Toast.makeText(context, "No Teas Found", Toast.LENGTH_SHORT).show()

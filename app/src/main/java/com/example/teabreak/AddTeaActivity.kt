@@ -139,7 +139,7 @@ class AddTeaActivity : AppCompatActivity() {
     private fun imageToBitmap(image: ImageView): ByteArray {
         val bitmap = (image.drawable as BitmapDrawable).bitmap
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream)
 
         return stream.toByteArray()
     }

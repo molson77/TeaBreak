@@ -66,57 +66,69 @@
 
                     <ImageView
                         android:id="@+id/imageView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginBottom="8dp"
                         card_view:layout_constraintBottom_toBottomOf="parent"
+                        card_view:layout_constraintEnd_toStartOf="@+id/tea_temp"
                         card_view:layout_constraintStart_toStartOf="parent"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:srcCompat="@drawable/temp_icon" />
 
                     <TextView
                         android:id="@+id/tea_temp"
-                        android:layout_width="wrap_content"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="8dp"
+                        card_view:layout_constraintEnd_toStartOf="@+id/imageView3"
                         card_view:layout_constraintStart_toEndOf="@+id/imageView2"
-                        tools:layout_editor_absoluteY="2dp" />
+                        card_view:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginBottom="8dp"
                         card_view:layout_constraintBottom_toBottomOf="parent"
+                        card_view:layout_constraintEnd_toStartOf="@+id/tea_amount"
                         card_view:layout_constraintStart_toEndOf="@+id/tea_temp"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:srcCompat="@drawable/leaf_icon" />
 
                     <TextView
                         android:id="@+id/tea_amount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="8dp"
+                        card_view:layout_constraintEnd_toStartOf="@+id/imageView4"
                         card_view:layout_constraintStart_toEndOf="@+id/imageView3"
-                        tools:layout_editor_absoluteY="2dp" />
+                        card_view:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/imageView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginBottom="8dp"
                         card_view:layout_constraintBottom_toBottomOf="parent"
+                        card_view:layout_constraintEnd_toStartOf="@+id/tea_time"
                         card_view:layout_constraintStart_toEndOf="@+id/tea_amount"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:srcCompat="@drawable/timer_icon" />
 
                     <TextView
                         android:id="@+id/tea_time"
-                        android:layout_width="wrap_content"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="2dp"
                         card_view:layout_constraintStart_toEndOf="@+id/imageView4"
-                        tools:layout_editor_absoluteY="2dp" />
+                        card_view:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>

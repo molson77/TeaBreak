@@ -19,6 +19,7 @@ package com.example.teabreak.ui.home
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -96,6 +98,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
+    val context = LocalContext.current
     val homeUiState by viewModel.homeUiState.collectAsState()
 
     Scaffold(
@@ -122,7 +125,9 @@ fun HomeScreen(
     ) { innerPadding ->
         HomeBody(
             teaList = homeUiState.teaList,
-            onTeaClick = navigateToTeaUpdate,
+            onTeaClick = {
+                Toast.makeText(context, "Navigate to Timer", Toast.LENGTH_SHORT).show()
+            },
             modifier = Modifier
                 .padding(innerPadding)
         )

@@ -24,7 +24,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.teabreak.TeaBreakApplication
 import com.example.teabreak.ui.home.HomeViewModel
-import com.example.teabreak.ui.tea.TeaDetailsViewModel
 import com.example.teabreak.ui.tea.TeaEditViewModel
 import com.example.teabreak.ui.tea.TeaEntryViewModel
 
@@ -36,19 +35,13 @@ object AppViewModelProvider {
         // Initializer for TeaEditViewModel
         initializer {
             TeaEditViewModel(
-                this.createSavedStateHandle()
+                this.createSavedStateHandle(),
+                teaBreakApplication().container.teasRepository
             )
         }
         // Initializer for TeaEntryViewModel
         initializer {
             TeaEntryViewModel(teaBreakApplication().container.teasRepository)
-        }
-
-        // Initializer for TeaDetailsViewModel
-        initializer {
-            TeaDetailsViewModel(
-                this.createSavedStateHandle()
-            )
         }
 
         // Initializer for HomeViewModel

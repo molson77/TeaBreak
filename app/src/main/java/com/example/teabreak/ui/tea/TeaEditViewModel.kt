@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.teabreak.data.ScoopUnit
+import com.example.teabreak.data.Tea
 import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.TeasRepository
 
@@ -29,20 +30,56 @@ import com.example.teabreak.data.TeasRepository
  * ViewModel to retrieve and update an tea from the [TeasRepository]'s data source.
  */
 class TeaEditViewModel(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val teasRepository: TeasRepository
 ) : ViewModel() {
+
+    private val teaId: Int = checkNotNull(savedStateHandle[TeaEditDestination.teaIdArg])
+    private var tea: Tea? = null
+
     /**
      * Holds current tea ui state
      */
     var teaUiState by mutableStateOf(TeaUiState())
         private set
 
-    private val teaId: Int = checkNotNull(savedStateHandle[TeaEditDestination.teaIdArg])
+    /**
+     * Sets initial UI state for editing a tea object
+     */
+    suspend fun setInitialUIState() {
+        teasRepository.getTeaStream(teaId).collect {
+            it?.let {
+                tea = it
+                teaUiState = it.toTeaUiState(true)
+            }
+        }
+    }
+
+    /**
+     * Updates the [teaUiState] with the value provided in the argument. This method also triggers
+     * a validation for input values.
+     */
+    fun updateUiState(teaDetails: TeaDetails) {
+        teaUiState =
+            TeaUiState(teaDetails = teaDetails, isEntryValid = validateInput(teaDetails))
+    }
+
+    suspend fun saveTea() {
+        if (validateInput()) {
+            teasRepository.updateTea(teaUiState.teaDetails.toTea())
+        }
+    }
+
+    suspend fun deleteTea() {
+        tea?.let {
+            teasRepository.deleteTea(it)
+        }
+    }
 
     private fun validateInput(uiState: TeaDetails = teaUiState.teaDetails): Boolean {
         return with(uiState) {
             name.isNotBlank()
-                    && TeaType.values().contains(type)
+                    && TeaType.values().contains(uiState.type)
                     && scoopAmount >= 0
                     && ScoopUnit.values().contains(scoopUnit)
                     && temp != 0 && temp <= 212

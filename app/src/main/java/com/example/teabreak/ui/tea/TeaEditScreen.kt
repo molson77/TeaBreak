@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +34,7 @@ import com.example.teabreak.data.Utils
 import com.example.teabreak.ui.AppViewModelProvider
 import com.example.teabreak.ui.navigation.NavigationDestination
 import com.example.teabreak.ui.theme.TeaBreakTheme
+import kotlinx.coroutines.launch
 
 object TeaEditDestination : NavigationDestination {
     override val route = "tea_edit"
@@ -43,11 +46,16 @@ object TeaEditDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeaEditScreen(
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TeaEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+
+    LaunchedEffect(key1 = null) {
+        viewModel.setInitialUIState()
+    }
+
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TeaBreakTopAppBar(
@@ -60,10 +68,22 @@ fun TeaEditScreen(
     ) { innerPadding ->
         TeaEntryBody(
             teaUiState = viewModel.teaUiState,
-            onTeaValueChange = { },
+            onTeaValueChange = viewModel::updateUiState,
             editMode = true,
-            onSaveClick = { viewModel },
-            onDeleteClick = { },
+            onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.saveTea()
+                }.invokeOnCompletion {
+                    onNavigateUp.invoke()
+                }
+            },
+            onDeleteClick = {
+                coroutineScope.launch {
+                    viewModel.deleteTea()
+                }.invokeOnCompletion {
+                    onNavigateUp.invoke()
+                }
+            },
             modifier = Modifier.padding(innerPadding)
         )
     }

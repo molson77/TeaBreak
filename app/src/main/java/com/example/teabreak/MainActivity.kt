@@ -16,6 +16,8 @@
 package com.example.teabreak
 
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,9 +26,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.teabreak.ui.theme.TeaBreakTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        StrictMode.setVmPolicy(
+            VmPolicy.Builder(StrictMode.getVmPolicy())
+                .detectLeakedClosableObjects()
+                .build()
+        )
+
         setContent {
             TeaBreakTheme {
                 // TODO: hoist top bar and nav elements to here

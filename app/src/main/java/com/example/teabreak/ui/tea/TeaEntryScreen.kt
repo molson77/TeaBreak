@@ -28,6 +28,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -45,6 +46,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -53,8 +55,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.teabreak.TeaBreakTopAppBar
 import com.example.teabreak.R
+import com.example.teabreak.TeaBreakTopAppBar
 import com.example.teabreak.data.ScoopUnit
 import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.Utils
@@ -72,7 +74,6 @@ object TeaEntryDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeaEntryScreen(
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
     viewModel: TeaEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -93,7 +94,8 @@ fun TeaEntryScreen(
             onSaveClick = {
                 coroutineScope.launch {
                     viewModel.saveTea()
-                    navigateBack()
+                }.invokeOnCompletion {
+                    onNavigateUp.invoke()
                 }
             },
             onDeleteClick = {
@@ -128,10 +130,27 @@ fun TeaEntryBody(
         Button(
             onClick = onSaveClick,
             enabled = teaUiState.isEntryValid,
+            colors = ButtonDefaults.buttonColors(
+                contentColor = Color.White
+            ),
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.save_action))
+        }
+        if (editMode) {
+            Button(
+                onClick = onDeleteClick,
+                enabled = true,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red.copy(alpha = 0.7F),
+                    contentColor = Color.White
+                ),
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.delete))
+            }
         }
     }
 }

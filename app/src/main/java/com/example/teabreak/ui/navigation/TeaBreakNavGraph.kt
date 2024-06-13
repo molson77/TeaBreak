@@ -25,8 +25,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.teabreak.ui.home.HomeDestination
 import com.example.teabreak.ui.home.HomeScreen
-import com.example.teabreak.ui.tea.TeaDetailsDestination
-import com.example.teabreak.ui.tea.TeaDetailsScreen
 import com.example.teabreak.ui.tea.TeaEditDestination
 import com.example.teabreak.ui.tea.TeaEditScreen
 import com.example.teabreak.ui.tea.TeaEntryDestination
@@ -43,37 +41,32 @@ fun TeaBreakNavHost(
     NavHost(
         navController = navController, startDestination = HomeDestination.route, modifier = modifier
     ) {
+
         composable(route = HomeDestination.route) {
-            HomeScreen(navigateToTeaEntry = { navController.navigate(TeaEntryDestination.route) },
-                navigateToTeaUpdate = {
-                    navController.navigate("${TeaDetailsDestination.route}/${it}")
-                })
+            HomeScreen(
+                navigateToTeaEntry = {
+                    navController.navigate(TeaEntryDestination.route) },
+                navigateToTeaEdit = {
+                    navController.navigate("${TeaEditDestination.route}/${it}") }
+            )
         }
+
         composable(route = TeaEntryDestination.route) {
-            TeaEntryScreen(navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() })
+            TeaEntryScreen(
+                onNavigateUp = { navController.navigateUp() }
+            )
         }
-        composable(
-            route = TeaDetailsDestination.routeWithArgs,
-            arguments = listOf(navArgument(TeaDetailsDestination.teaIdArg) {
-                type = NavType.IntType
-            })
-        ) {
-            TeaDetailsScreen(
-                navigateToEditTea =
-                {
-                    navController.navigate("${TeaEditDestination.route}/$it")
-                },
-                navigateBack = { navController.navigateUp() })
-        }
+
         composable(
             route = TeaEditDestination.routeWithArgs,
             arguments = listOf(navArgument(TeaEditDestination.teaIdArg) {
                 type = NavType.IntType
             })
         ) {
-            TeaEditScreen(navigateBack = { navController.popBackStack() },
-                onNavigateUp = { navController.navigateUp() })
+            TeaEditScreen(
+                onNavigateUp = { navController.navigateUp() }
+            )
         }
+
     }
 }

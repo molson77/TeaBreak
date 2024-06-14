@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -174,6 +175,7 @@ fun TeaBreakTopAppBar(
                 Box(
                     Modifier
                         .fillMaxWidth()
+                        .fillMaxHeight()
                         .padding(vertical = 12.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -181,7 +183,8 @@ fun TeaBreakTopAppBar(
                         Text(
                             text = title,
                             color = Color.White,
-                            fontWeight = FontWeight.W600
+                            fontWeight = FontWeight.W600,
+                            modifier = Modifier
                         )
                     } else {
                         Icon(

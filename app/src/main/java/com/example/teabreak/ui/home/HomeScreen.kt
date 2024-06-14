@@ -18,9 +18,7 @@ package com.example.teabreak.ui.home
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement

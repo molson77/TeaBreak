@@ -150,6 +150,7 @@ fun TeaBreakTopAppBar(
     TeaBreakTheme {
         Surface(
             color = MaterialTheme.colorScheme.primary,
+            shadowElevation = 6.dp,
             modifier = modifier
                 .fillMaxWidth()
                 .height(60.dp)

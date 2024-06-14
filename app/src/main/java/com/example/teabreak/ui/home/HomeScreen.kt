@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.teabreak.R
 import com.example.teabreak.TeaBreakTopAppBar
+import com.example.teabreak.TeaTimerActivity
 import com.example.teabreak.data.Tea
 import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.Utils
@@ -78,7 +79,6 @@ object HomeDestination : NavigationDestination {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    navigateToTeaEntry: () -> Unit,
     navigateToTeaEdit: (Int) -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -89,24 +89,23 @@ fun HomeScreen(
     HomeBody(
         teaList = homeUiState.teaList,
         onTeaClick = {
-            // TODO: Launch Timer Activity
-            Toast.makeText(context, "Navigate to Timer", Toast.LENGTH_SHORT).show()
+            context.startActivity(TeaTimerActivity.createTimerActivityIntent(context, it))
         },
         onTeaLongClick = {
-            navigateToTeaEdit(it)
+            navigateToTeaEdit(it.id)
         }
     )
 }
 
 @Composable
 private fun HomeBody(
-    teaList: List<Tea>, onTeaClick: (Int) -> Unit, onTeaLongClick: (Int) -> Unit, modifier: Modifier = Modifier
+    teaList: List<Tea>, onTeaClick: (Tea) -> Unit, onTeaLongClick: (Tea) -> Unit, modifier: Modifier = Modifier
 ) {
     TeaBreakList(
         modifier = modifier,
         teaList = teaList,
-        onTeaClick = { onTeaClick(it.id) },
-        onTeaLongClick = { onTeaLongClick(it.id) }
+        onTeaClick = { onTeaClick(it) },
+        onTeaLongClick = { onTeaLongClick(it) }
     )
 }
 

@@ -44,8 +44,6 @@ fun TeaBreakNavHost(
 
         composable(route = HomeDestination.route) {
             HomeScreen(
-                navigateToTeaEntry = {
-                    navController.navigate(TeaEntryDestination.route) },
                 navigateToTeaEdit = {
                     navController.navigate("${TeaEditDestination.route}/${it}") }
             )

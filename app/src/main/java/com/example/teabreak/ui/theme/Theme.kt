@@ -30,6 +30,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.example.teabreak.data.TeaType
+import com.example.teabreak.data.Utils
 
 private val LightColorScheme = lightColorScheme(
     primary = tb_theme_light_primary,
@@ -50,17 +52,9 @@ private val DarkColorScheme = darkColorScheme(
 @Composable
 fun TeaBreakTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    // Dynamic color in this app is turned off for learning purposes
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -70,6 +64,35 @@ fun TeaBreakTheme(
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
             window.navigationBarColor = Color.Black.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
+        }
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        shapes = Shapes,
+        content = content
+    )
+}
+
+@Composable
+fun TeaTimerTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    teaType: TeaType,
+    content: @Composable () -> Unit
+) {
+    val backgroundColor = Utils.getTeaBackgroundColor(teaType)
+
+    val colorScheme = when {
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = backgroundColor.toArgb()
+            window.navigationBarColor = backgroundColor.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }

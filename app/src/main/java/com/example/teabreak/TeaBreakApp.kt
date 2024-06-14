@@ -18,15 +18,18 @@ package com.example.teabreak
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.os.Bundle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Filled
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,22 +37,31 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.teabreak.R.string
 import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.Utils
+import com.example.teabreak.ui.home.HomeDestination
 import com.example.teabreak.ui.navigation.TeaBreakNavHost
+import com.example.teabreak.ui.tea.TeaEditDestination
 import com.example.teabreak.ui.tea.TeaEntryBody
+import com.example.teabreak.ui.tea.TeaEntryDestination
 import com.example.teabreak.ui.tea.TeaUiState
 import com.example.teabreak.ui.theme.TeaBreakTheme
 
@@ -59,7 +71,69 @@ import com.example.teabreak.ui.theme.TeaBreakTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TeaBreakApp(navController: NavHostController = rememberNavController()) {
-    TeaBreakNavHost(navController = navController)
+    TeaBreakScaffold(navController = navController)
+}
+
+@Composable
+fun TeaBreakScaffold(navController: NavHostController) {
+
+    var titleRes: Int? by remember {
+        mutableStateOf(null)
+    }
+    var canNavigateBack: Boolean by remember {
+        mutableStateOf(false)
+    }
+    var showFab: Boolean by remember {
+        mutableStateOf(true)
+    }
+
+    navController.addOnDestinationChangedListener { navController: NavController, navDestination: NavDestination, bundle: Bundle? ->
+        if (navDestination.route == HomeDestination.route) {
+            titleRes = null
+            canNavigateBack = false
+            showFab = true
+        } else if (navDestination.route == TeaEntryDestination.route) {
+            titleRes = TeaEntryDestination.titleRes
+            canNavigateBack = true
+            showFab = false
+        } else if (navDestination.route?.contains(TeaEditDestination.route) == true) {
+            titleRes = TeaEditDestination.titleRes
+            canNavigateBack = true
+            showFab = false
+        } else {
+            titleRes = null
+            canNavigateBack = false
+            showFab = true
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TeaBreakTopAppBar(
+                title = titleRes?.let { stringResource(id = it) },
+                canNavigateBack = canNavigateBack,
+                navigateUp = { navController.popBackStack() }
+            )
+        },
+        floatingActionButton = {
+            if (showFab) {
+                FloatingActionButton(
+                    onClick = { navController.navigate(TeaEntryDestination.route) },
+                    shape = MaterialTheme.shapes.medium,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.tea_entry_title),
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+    ) {
+        TeaBreakNavHost(navController = navController, modifier = Modifier.padding(it))
+    }
 }
 
 /**

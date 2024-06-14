@@ -71,42 +71,30 @@ object TeaEntryDestination : NavigationDestination {
     override val titleRes = R.string.tea_entry_title
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeaEntryScreen(
     onNavigateUp: () -> Unit,
-    canNavigateBack: Boolean = true,
     viewModel: TeaEntryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
-    Scaffold(
-        topBar = {
-            TeaBreakTopAppBar(
-                title = stringResource(TeaEntryDestination.titleRes),
-                canNavigateBack = canNavigateBack,
-                navigateUp = onNavigateUp
-            )
-        }
-    ) { innerPadding ->
-        TeaEntryBody(
-            teaUiState = viewModel.teaUiState,
-            onTeaValueChange = viewModel::updateUiState,
-            onSaveClick = {
-                coroutineScope.launch {
-                    viewModel.saveTea()
-                }.invokeOnCompletion {
-                    onNavigateUp.invoke()
-                }
-            },
-            onDeleteClick = {
 
-            },
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .fillMaxWidth()
-        )
-    }
+    TeaEntryBody(
+        teaUiState = viewModel.teaUiState,
+        onTeaValueChange = viewModel::updateUiState,
+        onSaveClick = {
+            coroutineScope.launch {
+                viewModel.saveTea()
+            }.invokeOnCompletion {
+                onNavigateUp.invoke()
+            }
+        },
+        onDeleteClick = {
+
+        },
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+    )
 }
 
 @Composable

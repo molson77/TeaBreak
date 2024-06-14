@@ -91,40 +91,16 @@ fun HomeScreen(
     val context = LocalContext.current
     val homeUiState by viewModel.homeUiState.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TeaBreakTopAppBar(
-                title = null,
-                canNavigateBack = false
-            )
+    HomeBody(
+        teaList = homeUiState.teaList,
+        onTeaClick = {
+            // TODO: Launch Timer Activity
+            Toast.makeText(context, "Navigate to Timer", Toast.LENGTH_SHORT).show()
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = navigateToTeaEntry,
-                shape = MaterialTheme.shapes.medium,
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.tea_entry_title),
-                    tint = Color.White
-                )
-            }
-        },
-    ) { innerPadding ->
-        HomeBody(
-            teaList = homeUiState.teaList,
-            onTeaClick = {
-                Toast.makeText(context, "Navigate to Timer", Toast.LENGTH_SHORT).show()
-            },
-            onTeaLongClick = {
-                navigateToTeaEdit(it)
-            },
-            modifier = Modifier
-                .padding(innerPadding)
-        )
-    }
+        onTeaLongClick = {
+            navigateToTeaEdit(it)
+        }
+    )
 }
 
 @Composable

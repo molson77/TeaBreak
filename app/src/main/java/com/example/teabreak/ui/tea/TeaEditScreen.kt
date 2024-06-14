@@ -43,50 +43,36 @@ object TeaEditDestination : NavigationDestination {
     val routeWithArgs = "$route/{$teaIdArg}"
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeaEditScreen(
     onNavigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: TeaEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = null) {
         viewModel.setInitialUIState()
     }
 
-    val coroutineScope = rememberCoroutineScope()
-    Scaffold(
-        topBar = {
-            TeaBreakTopAppBar(
-                title = stringResource(TeaEditDestination.titleRes),
-                canNavigateBack = true,
-                navigateUp = onNavigateUp
-            )
+    TeaEntryBody(
+        teaUiState = viewModel.teaUiState,
+        onTeaValueChange = viewModel::updateUiState,
+        editMode = true,
+        onSaveClick = {
+            coroutineScope.launch {
+                viewModel.saveTea()
+            }.invokeOnCompletion {
+                onNavigateUp.invoke()
+            }
         },
-        modifier = modifier
-    ) { innerPadding ->
-        TeaEntryBody(
-            teaUiState = viewModel.teaUiState,
-            onTeaValueChange = viewModel::updateUiState,
-            editMode = true,
-            onSaveClick = {
-                coroutineScope.launch {
-                    viewModel.saveTea()
-                }.invokeOnCompletion {
-                    onNavigateUp.invoke()
-                }
-            },
-            onDeleteClick = {
-                coroutineScope.launch {
-                    viewModel.deleteTea()
-                }.invokeOnCompletion {
-                    onNavigateUp.invoke()
-                }
-            },
-            modifier = Modifier.padding(innerPadding)
-        )
-    }
+        onDeleteClick = {
+            coroutineScope.launch {
+                viewModel.deleteTea()
+            }.invokeOnCompletion {
+                onNavigateUp.invoke()
+            }
+        }
+    )
 }
 
 @Preview(

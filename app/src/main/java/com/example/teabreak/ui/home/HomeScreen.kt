@@ -19,8 +19,9 @@ package com.example.teabreak.ui.home
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,14 +35,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,9 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -129,24 +124,30 @@ private fun TeaBreakList(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
         items(items = teaList.sortedBy { it.type }) { tea ->
-            TeaBreakTea(tea = tea,
-                modifier = Modifier
-                    .combinedClickable(
-                        onClick = { onTeaClick(tea) },
-                        onLongClick = { onTeaLongClick(tea) }
-                    )
+            TeaBreakTea(
+                tea = tea,
+                onTeaClick = onTeaClick,
+                onTeaLongClick = onTeaLongClick,
+                modifier = Modifier.animateItemPlacement(
+                    // TODO animate list population
+                    spring()
+                )
             )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TeaBreakTea(
-    tea: Tea, modifier: Modifier = Modifier
+    tea: Tea, onTeaClick: (Tea) -> Unit, onTeaLongClick: (Tea) -> Unit, modifier: Modifier = Modifier
 ) {
 
     Card(
-        modifier = modifier,
+        modifier = modifier.combinedClickable(
+            onClick = { onTeaClick(tea) },
+            onLongClick = { onTeaLongClick(tea) }
+        ),
         colors = CardDefaults.cardColors(
             containerColor = Utils.getTeaBackgroundColor(tea.type)
         ),

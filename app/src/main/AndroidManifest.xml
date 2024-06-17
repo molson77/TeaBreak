@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".TeaBreakApplication"
         android:allowBackup="true"
@@ -11,9 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TeaBreak"
         tools:targetApi="33">
+
         <activity
             android:name=".TeaTimerActivity"
             android:exported="false"
+            android:launchMode="singleInstance"
             android:label="@string/title_activity_tea_timer"
             android:theme="@style/Theme.TeaBreak" />
         <activity
@@ -27,6 +33,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".TeaTimerService"
+            android:enabled="true" />
     </application>
 
 </manifest>

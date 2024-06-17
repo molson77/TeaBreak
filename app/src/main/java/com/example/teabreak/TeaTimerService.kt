@@ -1,0 +1,210 @@
+package com.example.teabreak
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Intent
+import android.os.CountDownTimer
+import android.os.IBinder
+import android.util.Log
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.viewinterop.NoOpUpdate
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import com.example.teabreak.data.TeaType
+import com.example.teabreak.data.Utils
+
+class TeaTimerService : Service() {
+
+    companion object {
+
+        // IDs for notifications
+        const val CHANNEL_ID = "Timer_Notifications"
+        const val TIMER_NOTIFICATION_ID = 1470
+
+        // TeaTimer countdown broadcast receiver
+        const val COUNTDOWN_BR: String = "your_package_name.countdown_br"
+        const val COUNTDOWN_MILLIS_REMAINING: String = "COUNTDOWN_MILLIS_REMAINING"
+
+        // intent extras
+        const val TEA_ID = "TEA_ID"
+        const val TEA_NAME = "TEA_NAME"
+        const val TEA_TYPE = "TEA_TYPE"
+        const val STEEP_TIME_SECONDS = "STEEP_TIME_SECONDS"
+
+        // actions
+        const val TIMER_ACTION = "TIMER_ACTION"
+        const val MOVE_TO_BACKGROUND = "MOVE_TO_BACKGROUND"
+        const val MOVE_TO_FOREGROUND = "MOVE_TO_FOREGROUND"
+        const val START = "START"
+        const val CANCEL = "CANCEL"
+
+    }
+
+    // Getting access to the NotificationManager
+    private lateinit var notificationManager: NotificationManager
+
+    // countdown timer
+    var countDownTimer: CountDownTimer? = null
+
+    // broadcast receiver intent
+    val broadcastIntent = Intent(COUNTDOWN_BR)
+
+
+    override fun onBind(p0: Intent?): IBinder? {
+        Log.d("TeaTimer", "TeaTimer onBind")
+        return null
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        createChannel()
+        getNotificationManager()
+
+        val action = intent?.getStringExtra(TIMER_ACTION)!!
+
+        Log.d("Stopwatch", "onStartCommand Action: $action")
+
+        when (action) {
+            START -> {
+                val teaId = intent.getIntExtra(TEA_ID, 0)
+                val teaName = intent.getStringExtra(TEA_NAME) ?: ""
+                val teaType = intent.getSerializableExtra(TEA_TYPE) as TeaType
+                val timerDuration = (intent.getIntExtra(STEEP_TIME_SECONDS, 120) * 1000).toLong()
+                startTimer(teaId, teaName, teaType, timerDuration)
+            }
+            CANCEL -> cancelTimer()
+            MOVE_TO_FOREGROUND -> {
+                val teaId = intent.getIntExtra(TEA_ID, 0)
+                val teaName = intent.getStringExtra(TEA_NAME) ?: ""
+                val teaType = intent.getSerializableExtra(TEA_TYPE) as TeaType
+                val timerDuration = (intent.getIntExtra(STEEP_TIME_SECONDS, 120) * 1000).toLong()
+                moveToForeground(teaId, teaName, teaType, timerDuration)
+            }
+            MOVE_TO_BACKGROUND -> moveToBackground()
+        }
+
+        return START_STICKY
+    }
+
+    private fun cancelTimer() {
+        Log.d("TeaTimer", "TeaTimer cancelled")
+        deleteNotification()
+        countDownTimer?.cancel()
+        countDownTimer = null
+    }
+
+    private fun startTimer(teaId: Int, teaName: String, teaType: TeaType, timerDuration: Long) {
+        Log.d("TeaTimer", "TeaTimer started: $teaName $timerDuration")
+        countDownTimer = object: CountDownTimer(timerDuration, 1000) {
+            override fun onTick(p0: Long) {
+                Log.d("TeaTimer", "TeaTimer $teaName millis remaining: $p0")
+                broadcastIntent.putExtra(COUNTDOWN_MILLIS_REMAINING, p0)
+                sendBroadcast(broadcastIntent)
+                updateNotification(teaId, teaName, teaType, p0)
+            }
+
+            override fun onFinish() {
+                Log.d("TeaTimer", "TeaTimer finished: $teaName $timerDuration")
+            }
+        }
+        countDownTimer?.start()
+    }
+
+    private fun moveToBackground() {
+        Log.d("TeaTimer", "TeaTimer moved to background")
+        stopForeground(true)
+    }
+
+    private fun moveToForeground(teaId: Int, teaName: String, teaType: TeaType, timerDuration: Long) {
+        Log.d("TeaTimer", "TeaTimer moved to foreground")
+        startForeground(TIMER_NOTIFICATION_ID, buildNotification(teaId, teaName, teaType, timerDuration))
+    }
+
+    private fun createChannel() {
+        val notificationChannel = NotificationChannel(
+            CHANNEL_ID,
+            "TeaTimer",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationChannel.setSound(null, null)
+        notificationChannel.setShowBadge(true)
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    private fun buildNotification(teaId: Int, teaName: String, teaType: TeaType, p0: Long): Notification {
+        val secondsRemaining = if (p0.toInt() == 0) 0 else (p0.toInt() / 1000)
+
+        if (secondsRemaining == 0) {
+            val title = "Finished brewing $teaName!"
+            val timeText = Utils.formatTime(secondsRemaining)
+
+            val intent = Intent(this, TeaTimerActivity::class.java)
+            intent.putExtra(TeaTimerActivity.TEA_ID, teaId)
+            intent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
+
+            val pIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+
+            return NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(title)
+                .setOngoing(false)
+                .setContentText(
+                    "$timeText remaining"
+                )
+                .setColorized(true)
+                .setColor(Utils.getTeaBackgroundColor(teaType).toArgb())
+                .setSmallIcon(R.drawable.tea_bag)
+                .setOnlyAlertOnce(false)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true)
+                .build()
+
+        } else {
+            val title = "Brewing $teaName"
+            val timeText = Utils.formatTime(secondsRemaining)
+
+            val intent = Intent(this, TeaTimerActivity::class.java)
+            intent.putExtra(TeaTimerActivity.TEA_ID, teaId)
+            intent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
+
+            val pIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+
+            return NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle(title)
+                .setOngoing(true)
+                .setContentText(
+                    "$timeText remaining"
+                )
+                .setColorized(true)
+                .setColor(Utils.getTeaBackgroundColor(teaType).toArgb())
+                .setSmallIcon(R.drawable.tea_bag)
+                .setOnlyAlertOnce(true)
+                .setContentIntent(pIntent)
+                .setAutoCancel(false)
+                .build()
+        }
+    }
+
+    private fun deleteNotification() {
+        notificationManager.cancel(TIMER_NOTIFICATION_ID)
+    }
+
+    private fun updateNotification(teaId: Int, teaName: String, teaType: TeaType, p0: Long) {
+        notificationManager.notify(
+            TIMER_NOTIFICATION_ID,
+            buildNotification(teaId, teaName, teaType, p0)
+        )
+    }
+
+    private fun getNotificationManager() {
+        notificationManager = ContextCompat.getSystemService(
+            this,
+            NotificationManager::class.java
+        ) as NotificationManager
+    }
+}

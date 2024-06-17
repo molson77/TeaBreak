@@ -26,6 +26,7 @@ import com.example.teabreak.TeaBreakApplication
 import com.example.teabreak.ui.home.HomeViewModel
 import com.example.teabreak.ui.tea.TeaEditViewModel
 import com.example.teabreak.ui.tea.TeaEntryViewModel
+import com.example.teabreak.ui.tea.TeaTimerViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire TeaBreak app
@@ -47,6 +48,11 @@ object AppViewModelProvider {
         // Initializer for HomeViewModel
         initializer {
             HomeViewModel(teaBreakApplication().container.teasRepository)
+        }
+
+        // Initializer for TeaTimerViewModel
+        initializer {
+            TeaTimerViewModel(teaBreakApplication().container.teasRepository)
         }
     }
 }

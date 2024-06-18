@@ -31,8 +31,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TeaBreakTheme {
-                // TODO: hoist top bar and nav elements to here
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {

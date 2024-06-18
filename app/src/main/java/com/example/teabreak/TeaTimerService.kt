@@ -5,16 +5,17 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.app.TaskStackBuilder
 import android.content.Intent
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.Utils
+import kotlin.concurrent.timer
 
 class TeaTimerService : Service() {
 
@@ -100,13 +101,19 @@ class TeaTimerService : Service() {
         countDownTimer = object: CountDownTimer(timerDuration, 1000) {
             override fun onTick(p0: Long) {
                 Log.d("TeaTimer", "TeaTimer $teaName millis remaining: $p0")
-                broadcastIntent.putExtra(COUNTDOWN_MILLIS_REMAINING, p0)
-                sendBroadcast(broadcastIntent)
-                updateNotification(teaId, teaName, teaType, p0)
+                if (p0 != 0L) {
+                    broadcastIntent.putExtra(COUNTDOWN_MILLIS_REMAINING, p0)
+                    sendBroadcast(broadcastIntent)
+                    updateNotification(teaId, teaName, teaType, p0)
+                }
             }
 
             override fun onFinish() {
                 Log.d("TeaTimer", "TeaTimer finished: $teaName $timerDuration")
+                broadcastIntent.putExtra(COUNTDOWN_MILLIS_REMAINING, 0)
+                sendBroadcast(broadcastIntent)
+                updateNotification(teaId, teaName, teaType, 0)
+                this@TeaTimerService.stopSelf()
             }
         }
         countDownTimer?.start()
@@ -141,25 +148,26 @@ class TeaTimerService : Service() {
             val title = "Finished brewing $teaName!"
             val timeText = Utils.formatTime(secondsRemaining)
 
-            val intent = Intent(this, TeaTimerActivity::class.java)
-            intent.putExtra(TeaTimerActivity.TEA_ID, teaId)
-            intent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
-
-            val pIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+            val stackBuilder: TaskStackBuilder = TaskStackBuilder.create(this)
+            val homeIntent = Intent(this, MainActivity::class.java)
+            stackBuilder.addParentStack(MainActivity::class.java)
+            stackBuilder.addNextIntent(homeIntent)
+            val timerIntent = Intent(this, TeaTimerActivity::class.java)
+            timerIntent.putExtra(TeaTimerActivity.TEA_ID, teaId)
+            timerIntent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
+            stackBuilder.addNextIntent(timerIntent)
+            val pendingIntent: PendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
             return NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setOngoing(false)
-                .setContentText(
-                    "$timeText remaining"
-                )
                 .setColorized(true)
                 .setColor(Utils.getTeaBackgroundColor(teaType).toArgb())
                 .setSmallIcon(R.drawable.tea_bag)
                 .setOnlyAlertOnce(false)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setContentIntent(pIntent)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build()
 
@@ -167,12 +175,16 @@ class TeaTimerService : Service() {
             val title = "Brewing $teaName"
             val timeText = Utils.formatTime(secondsRemaining)
 
-            val intent = Intent(this, TeaTimerActivity::class.java)
-            intent.putExtra(TeaTimerActivity.TEA_ID, teaId)
-            intent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
-
-            val pIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+            val stackBuilder: TaskStackBuilder = TaskStackBuilder.create(this)
+            val homeIntent = Intent(this, MainActivity::class.java)
+            stackBuilder.addParentStack(MainActivity::class.java)
+            stackBuilder.addNextIntent(homeIntent)
+            val timerIntent = Intent(this, TeaTimerActivity::class.java)
+            timerIntent.putExtra(TeaTimerActivity.TEA_ID, teaId)
+            timerIntent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
+            stackBuilder.addNextIntent(timerIntent)
+            val pendingIntent: PendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
             return NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
@@ -184,7 +196,7 @@ class TeaTimerService : Service() {
                 .setColor(Utils.getTeaBackgroundColor(teaType).toArgb())
                 .setSmallIcon(R.drawable.tea_bag)
                 .setOnlyAlertOnce(true)
-                .setContentIntent(pIntent)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(false)
                 .build()
         }

@@ -144,12 +144,12 @@ class TeaTimerActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        unregisterReceiver(br)
         moveToForeground()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(br)
         stopService(Intent(this, TeaTimerService::class.java))
     }
 

@@ -58,9 +58,6 @@ class TeaTimerActivity : ComponentActivity() {
     private var teaId: Int = 0
     private lateinit var teaType: TeaType
 
-    private lateinit var statusReceiver: BroadcastReceiver
-    private lateinit var timeReceiver: BroadcastReceiver
-
     private val viewModel: TeaTimerViewModel by viewModels { AppViewModelProvider.Factory }
 
     private val br: BroadcastReceiver = object : BroadcastReceiver() {
@@ -99,7 +96,9 @@ class TeaTimerActivity : ComponentActivity() {
         teaId = intent.extras?.getInt(TEA_ID) ?: 0
         teaType = intent.extras?.getString(TEA_TYPE)?.let { TeaType.valueOf(it) } ?: TeaType.GREEN
 
-        viewModel.setInitialUIState(teaId)
+        if (!TeaTimerService.isTimerServiceActive) {
+            viewModel.setInitialUIState(teaId)
+        }
 
         val backgroundColor = Utils.getTeaBackgroundColor(teaType)
 
@@ -181,7 +180,7 @@ class TeaTimerActivity : ComponentActivity() {
 
     private fun moveToForeground() {
         val teaTimerService = Intent(this, TeaTimerService::class.java)
-        teaTimerService.putExtra(TeaTimerService.TIMER_ACTION, TeaTimerService.MOVE_TO_BACKGROUND)
+        teaTimerService.putExtra(TeaTimerService.TIMER_ACTION, TeaTimerService.MOVE_TO_FOREGROUND)
         teaTimerService.putExtra(TeaTimerService.TEA_ID, viewModel.teaUiState.tea.id)
         teaTimerService.putExtra(TeaTimerService.TEA_NAME, viewModel.teaUiState.tea.name)
         teaTimerService.putExtra(TeaTimerService.TEA_TYPE, viewModel.teaUiState.tea.type)

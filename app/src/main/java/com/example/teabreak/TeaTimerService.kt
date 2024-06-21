@@ -44,6 +44,8 @@ class TeaTimerService : Service() {
         const val START = "START"
         const val CANCEL = "CANCEL"
 
+        var isTimerServiceActive: Boolean = false
+
     }
 
     // Getting access to the NotificationManager
@@ -96,6 +98,7 @@ class TeaTimerService : Service() {
         deleteBrewingNotification()
         countDownTimer?.cancel()
         countDownTimer = null
+        isTimerServiceActive = false
     }
 
     private fun startTimer(teaId: Int, teaName: String, teaType: TeaType, timerDuration: Long) {
@@ -232,6 +235,7 @@ class TeaTimerService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelTimer()
         deleteBrewingNotification()
     }
 

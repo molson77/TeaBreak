@@ -160,7 +160,7 @@ class TeaTimerService : Service() {
         stackBuilder.addNextIntent(homeIntent)
         val timerIntent = Intent(this, TeaTimerActivity::class.java)
         timerIntent.putExtra(TeaTimerActivity.TEA_ID, teaId)
-        timerIntent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
+        timerIntent.putExtra(TeaTimerActivity.TEA_TYPE, teaType.name)
         stackBuilder.addNextIntent(timerIntent)
         val pendingIntent: PendingIntent =
             stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
@@ -190,7 +190,7 @@ class TeaTimerService : Service() {
         stackBuilder.addNextIntent(homeIntent)
         val timerIntent = Intent(this, TeaTimerActivity::class.java)
         timerIntent.putExtra(TeaTimerActivity.TEA_ID, teaId)
-        timerIntent.putExtra(TeaTimerActivity.TEA_TYPE, teaType)
+        timerIntent.putExtra(TeaTimerActivity.TEA_TYPE, teaType.name)
         stackBuilder.addNextIntent(timerIntent)
         val pendingIntent: PendingIntent =
             stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)

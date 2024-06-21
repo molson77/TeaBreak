@@ -19,7 +19,6 @@
         <activity
             android:name=".TeaTimerActivity"
             android:exported="false"
-            android:launchMode="singleInstance"
             android:label="@string/title_activity_tea_timer"
             android:theme="@style/Theme.TeaBreak" />
         <activity

@@ -83,7 +83,7 @@ class TeaEditViewModel(
                     && scoopAmount >= 0
                     && ScoopUnit.values().contains(scoopUnit)
                     && temp != 0 && temp <= 212
-                    && steepSeconds >= 0
+                    && steepSeconds > 0
         }
     }
 }

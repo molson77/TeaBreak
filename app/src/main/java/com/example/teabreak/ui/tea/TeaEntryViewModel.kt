@@ -24,7 +24,6 @@ import com.example.teabreak.data.ScoopUnit
 import com.example.teabreak.data.Tea
 import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.TeasRepository
-import java.text.NumberFormat
 
 /**
  * ViewModel to validate and insert teas in the Room database.

@@ -52,6 +52,10 @@ import com.example.teabreak.ui.home.TeaDetail
 import com.example.teabreak.ui.tea.TeaTimerViewModel
 import com.example.teabreak.ui.theme.TeaTimerTheme
 import android.Manifest
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.TextAlign
 
 class TeaTimerActivity : ComponentActivity() {
 
@@ -251,20 +255,27 @@ fun TeaTimerTitle(teaTimerUiState: TeaTimerViewModel.TeaTimerUiState, modifier: 
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(IntrinsicSize.Max)
         ) {
             Text(
                 text = if (teaTimerUiState.timerState == TeaTimerViewModel.TimerState.STEEPING) "Now Brewing:" else teaTimerUiState.tea.type.getName(),
-                color = Color.White,
-                fontWeight = FontWeight(300),
-                fontSize = TextUnit(14F, TextUnitType.Sp),
-                fontStyle = FontStyle.Italic
+                style = TextStyle(
+                    color = Color.White,
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight(300),
+                    fontSize = TextUnit(14F, TextUnitType.Sp),
+                    textAlign = TextAlign.Center,
+                )
             )
             Text(
                 text = teaTimerUiState.tea.name,
-                color = Color.White,
-                fontWeight = FontWeight(700),
-                fontSize = TextUnit(36F, TextUnitType.Sp)
+                style = TextStyle(
+                    color = Color.White,
+                    fontWeight = FontWeight(700),
+                    fontSize = TextUnit(36F, TextUnitType.Sp),
+                    textAlign = TextAlign.Center,
+                )
             )
         }
         TeaTimerDetails(
@@ -359,12 +370,12 @@ fun TeaTimerButton(
 
 @Preview
 @Composable
-fun GreetingPreview() {
+fun TimerPreview() {
     TeaTimerTheme(teaType = TeaType.OOLONG) {
 
-        val tea = Utils.getDefaultTeaObject(id = 1, "Iroh's Jasmine", TeaType.GREEN)
+        val tea = Utils.getDefaultTeaObject(id = 1, "French Blue Lavender", TeaType.HERBAL)
 
-        var uiState = TeaTimerViewModel.TeaTimerUiState(tea, 120, tea.steepSeconds, TeaTimerViewModel.TimerState.STEEPING)
+        var uiState = TeaTimerViewModel.TeaTimerUiState(tea, 234, tea.steepSeconds, TeaTimerViewModel.TimerState.STEEPING)
 
         Box(
             Modifier

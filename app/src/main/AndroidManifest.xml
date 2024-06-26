@@ -6,6 +6,8 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
     <application
         android:name=".TeaBreakApplication"
         android:allowBackup="true"
@@ -24,7 +26,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.TeaBreak">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +35,11 @@
         </activity>
         <service
             android:name=".TeaTimerService"
-            android:enabled="true" />
+            android:foregroundServiceType="specialUse"
+            android:enabled="true">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Starts a timer and maintains a persistent notification until tea steeping timer is complete or cancelled"/>
+        </service>
     </application>
 
 </manifest>

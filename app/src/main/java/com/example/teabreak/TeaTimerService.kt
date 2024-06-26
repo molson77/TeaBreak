@@ -6,7 +6,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
 import android.media.RingtoneManager
+import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
@@ -125,12 +127,23 @@ class TeaTimerService : Service() {
 
     private fun moveToBackground() {
         Log.d("TeaTimer", "TeaTimer moved to background")
-        stopForeground(true)
+        stopForeground(Service.STOP_FOREGROUND_DETACH)
     }
 
     private fun moveToForeground(teaId: Int, teaName: String, teaType: TeaType, timerDuration: Long) {
         Log.d("TeaTimer", "TeaTimer moved to foreground")
-        startForeground(TIMER_NOTIFICATION_ID, buildBrewingNotification(teaId, teaName, teaType, timerDuration))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(
+                TIMER_NOTIFICATION_ID,
+                buildBrewingNotification(teaId, teaName, teaType, timerDuration),
+                FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+            )
+        } else {
+            startForeground(
+                TIMER_NOTIFICATION_ID,
+                buildBrewingNotification(teaId, teaName, teaType, timerDuration)
+            )
+        }
     }
 
     private fun createChannel() {

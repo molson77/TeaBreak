@@ -243,7 +243,6 @@ class TeaTimerService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         cancelTimer()
-        deleteBrewingNotification()
     }
 
     private fun getNotificationManager() {

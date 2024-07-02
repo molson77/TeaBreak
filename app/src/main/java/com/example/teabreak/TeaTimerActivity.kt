@@ -61,6 +61,7 @@ class TeaTimerActivity : ComponentActivity() {
 
     private var teaId: Int = 0
     private lateinit var teaType: TeaType
+    private var isCancelling: Boolean = false
 
     private val viewModel: TeaTimerViewModel by viewModels { AppViewModelProvider.Factory }
 
@@ -147,7 +148,7 @@ class TeaTimerActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        moveToForeground()
+        if (!isCancelling) moveToForeground()
     }
 
     override fun onDestroy() {
@@ -169,9 +170,7 @@ class TeaTimerActivity : ComponentActivity() {
     }
 
     private fun cancelTeaTimer() {
-        val teaTimerService = Intent(this, TeaTimerService::class.java)
-        teaTimerService.putExtra(TeaTimerService.TIMER_ACTION, TeaTimerService.CANCEL)
-        startService(teaTimerService)
+        isCancelling = true
         stopService(Intent(this, TeaTimerService::class.java))
         finish()
     }

@@ -17,7 +17,11 @@
 package com.example.teabreak.ui.tea
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -45,6 +49,7 @@ object TeaEditDestination : NavigationDestination {
 
 @Composable
 fun TeaEditScreen(
+    modifier: Modifier = Modifier,
     onNavigateUp: () -> Unit,
     viewModel: TeaEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -54,7 +59,7 @@ fun TeaEditScreen(
         viewModel.setInitialUIState()
     }
 
-    TeaEntryBody(
+    NewTeaEntryBody(
         teaUiState = viewModel.teaUiState,
         onTeaValueChange = viewModel::updateUiState,
         editMode = true,
@@ -71,7 +76,11 @@ fun TeaEditScreen(
             }.invokeOnCompletion {
                 onNavigateUp.invoke()
             }
-        }
+        },
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .fillMaxHeight()
     )
 }
 
@@ -91,8 +100,8 @@ fun TeaEditScreenPreview() {
                 )
             }
         ) {
-            TeaEntryBody(
-                modifier = Modifier.padding(it),
+            NewTeaEntryBody(
+                modifier = Modifier.padding(it).fillMaxHeight(),
                 teaUiState = TeaUiState(
                     Utils.getDefaultBrewingPrefs(teaType = TeaType.GREEN, id = 0, name = "Jasmine Pearls")),
                 onTeaValueChange = {},

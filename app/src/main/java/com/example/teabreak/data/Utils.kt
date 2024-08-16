@@ -2,17 +2,41 @@ package com.example.teabreak.data
 
 import androidx.compose.ui.graphics.Color
 import com.example.teabreak.ui.tea.TeaDetails
+import com.example.teabreak.ui.theme.tb_tea_black_accent
 import com.example.teabreak.ui.theme.tb_tea_black_bg
+import com.example.teabreak.ui.theme.tb_tea_green_accent
 import com.example.teabreak.ui.theme.tb_tea_green_bg
+import com.example.teabreak.ui.theme.tb_tea_herbal_accent
 import com.example.teabreak.ui.theme.tb_tea_herbal_bg
+import com.example.teabreak.ui.theme.tb_tea_mate_accent
 import com.example.teabreak.ui.theme.tb_tea_mate_bg
+import com.example.teabreak.ui.theme.tb_tea_oolong_accent
 import com.example.teabreak.ui.theme.tb_tea_oolong_bg
+import com.example.teabreak.ui.theme.tb_tea_puerh_accent
 import com.example.teabreak.ui.theme.tb_tea_puerh_bg
+import com.example.teabreak.ui.theme.tb_tea_purple_accent
 import com.example.teabreak.ui.theme.tb_tea_purple_bg
+import com.example.teabreak.ui.theme.tb_tea_rooibos_accent
 import com.example.teabreak.ui.theme.tb_tea_rooibos_bg
+import com.example.teabreak.ui.theme.tb_tea_white_accent
 import com.example.teabreak.ui.theme.tb_tea_white_bg
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object Utils {
+
+    fun getTimeOfDay(): String {
+        val hourOfDayFormat = SimpleDateFormat("hh")
+        val currentHour = hourOfDayFormat.format(Date()).toInt()
+        return if (currentHour <= 12) {
+            "Morning"
+        } else if (currentHour <= 17) {
+            "Afternoon"
+        } else {
+            "Evening"
+        }
+    }
 
     fun secondsToMinutesAndSeconds(totalSeconds: Int): Pair<Int, Int> {
         val minutes = totalSeconds / 60
@@ -225,6 +249,20 @@ object Utils {
             TeaType.ROOIBOS -> tb_tea_rooibos_bg
             TeaType.MATE -> tb_tea_mate_bg
             TeaType.HERBAL -> tb_tea_herbal_bg
+        }
+    }
+
+    fun getTeaTypeColors(teaType: TeaType): Pair<Color, Color> {
+        return when(teaType) {
+            TeaType.GREEN -> Pair(tb_tea_green_bg, tb_tea_green_accent)
+            TeaType.BLACK -> Pair(tb_tea_black_bg, tb_tea_black_accent)
+            TeaType.OOLONG -> Pair(tb_tea_oolong_bg, tb_tea_oolong_accent)
+            TeaType.WHITE -> Pair(tb_tea_white_bg, tb_tea_white_accent)
+            TeaType.PU_ERH -> Pair(tb_tea_puerh_bg, tb_tea_puerh_accent)
+            TeaType.PURPLE -> Pair(tb_tea_purple_bg, tb_tea_purple_accent)
+            TeaType.ROOIBOS -> Pair(tb_tea_rooibos_bg, tb_tea_rooibos_accent)
+            TeaType.MATE -> Pair(tb_tea_mate_bg, tb_tea_mate_accent)
+            TeaType.HERBAL -> Pair(tb_tea_herbal_bg, tb_tea_herbal_accent)
         }
     }
 }

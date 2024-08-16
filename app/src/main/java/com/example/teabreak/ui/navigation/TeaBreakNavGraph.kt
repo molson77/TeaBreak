@@ -16,6 +16,7 @@
 
 package com.example.teabreak.ui.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -51,6 +52,7 @@ fun TeaBreakNavHost(
 
         composable(route = TeaEntryDestination.route) {
             TeaEntryScreen(
+                modifier = Modifier.fillMaxSize(),
                 onNavigateUp = { navController.navigateUp() }
             )
         }
@@ -62,6 +64,7 @@ fun TeaBreakNavHost(
             })
         ) {
             TeaEditScreen(
+                modifier = Modifier.fillMaxSize(),
                 onNavigateUp = { navController.navigateUp() }
             )
         }

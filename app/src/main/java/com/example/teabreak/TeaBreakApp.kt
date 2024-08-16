@@ -17,7 +17,6 @@
 package com.example.teabreak
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,12 +24,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,9 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,15 +49,14 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.teabreak.R.string
-import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.Utils
 import com.example.teabreak.ui.home.HomeDestination
 import com.example.teabreak.ui.navigation.TeaBreakNavHost
 import com.example.teabreak.ui.tea.TeaEditDestination
-import com.example.teabreak.ui.tea.TeaEntryBody
 import com.example.teabreak.ui.tea.TeaEntryDestination
-import com.example.teabreak.ui.tea.TeaUiState
 import com.example.teabreak.ui.theme.TeaBreakTheme
+import java.util.Calendar
+import java.util.Date
 
 /**
  * Top level composable that represents screens for the application.
@@ -113,27 +105,14 @@ fun TeaBreakScaffold(navController: NavHostController) {
             TeaBreakTopAppBar(
                 title = titleRes?.let { stringResource(id = it) },
                 canNavigateBack = canNavigateBack,
-                navigateUp = { navController.popBackStack() }
+                navigateUp = { navController.popBackStack() },
+                navigateToEntry = { navController.navigate(TeaEntryDestination.route) }
             )
-        },
-        floatingActionButton = {
-            if (showFab) {
-                FloatingActionButton(
-                    onClick = { navController.navigate(TeaEntryDestination.route) },
-                    shape = MaterialTheme.shapes.medium,
-                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.tea_entry_title),
-                        tint = Color.White
-                    )
-                }
-            }
         }
     ) {
-        TeaBreakNavHost(navController = navController, modifier = Modifier.padding(it))
+        TeaBreakNavHost(navController = navController, modifier = Modifier
+            .padding(it)
+            .fillMaxSize())
     }
 }
 
@@ -145,21 +124,27 @@ fun TeaBreakTopAppBar(
     title: String?,
     canNavigateBack: Boolean,
     modifier: Modifier = Modifier,
-    navigateUp: () -> Unit = {}
+    navigateUp: () -> Unit = {},
+    navigateToEntry: () -> Unit = {}
 ) {
+
+    val timeOfDay = remember {
+        Utils.getTimeOfDay()
+    }
+
     TeaBreakTheme {
         Surface(
             color = MaterialTheme.colorScheme.primary,
-            shadowElevation = 6.dp,
             modifier = modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .height(64.dp)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
                 if (canNavigateBack) {
+                    // in tea add or edit
                     Box(
                         Modifier
                             .align(Alignment.CenterStart)
@@ -168,32 +153,76 @@ fun TeaBreakTopAppBar(
                             Icon(
                                 imageVector = Filled.ArrowBack,
                                 contentDescription = stringResource(string.back_button),
-                                tint = Color.White
+                                tint = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }
-                }
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(vertical = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (title != null) {
-                        Text(
-                            text = title,
-                            color = Color.White,
-                            fontWeight = FontWeight.W600,
-                            modifier = Modifier
-                        )
-                    } else {
-                        Icon(
-                            modifier = Modifier.size(40.dp),
-                            painter = painterResource(id = R.drawable.teapotandcup),
-                            contentDescription = "TeaBreak logo",
-                            tint = Color.White
-                        )
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (title != null) {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.W600,
+                                modifier = Modifier
+                            )
+                        } else {
+                            Text(
+                                text = "Good Evening, Matt!",
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.W600,
+                                modifier = Modifier
+                            )
+                        }
+                    }
+                } else {
+                    // at home screen
+                    // navController.navigate(TeaEntryDestination.route)
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (title != null) {
+                            Text(
+                                text = title,
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.W600,
+                                modifier = Modifier
+                            )
+                        } else {
+                            Text(
+                                text = "Good ${timeOfDay}!",
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.W600,
+                                modifier = Modifier
+                            )
+                        }
+                    }
+                    Box(
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(horizontal = 8.dp)) {
+                        IconButton(
+                            onClick = { navigateToEntry.invoke() }
+                        ) {
+                            Icon(
+                                imageVector = Filled.Add,
+                                contentDescription = stringResource(string.back_button),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
                     }
                 }
             }
@@ -201,29 +230,21 @@ fun TeaBreakTopAppBar(
     }
 }
 
-@Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
+@Preview
 @Composable
-fun TeaBreakStructurePreview() {
+fun AppBarPreview() {
     TeaBreakTheme {
         Scaffold(
             topBar = {
-                TeaBreakTopAppBar(
-                    title = null,
-                    canNavigateBack = true,
-                    Modifier,
-                    navigateUp = {}
-                )
+                TeaBreakTopAppBar(title = null, canNavigateBack = false)
             }
         ) {
-            TeaEntryBody(
-                modifier = Modifier.padding(it),
-                teaUiState = TeaUiState(
-                Utils.getDefaultBrewingPrefs(teaType = TeaType.GREEN, id = 0, name = "Jasmine Pearls")),
-                onTeaValueChange = {},
-                onSaveClick = {}
-            )
+            Surface(
+                Modifier
+                    .fillMaxSize()
+                    .padding(it)) {
+
+            }
         }
     }
 }

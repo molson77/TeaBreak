@@ -1,5 +1,6 @@
 package com.example.teabreak
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -30,14 +31,18 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -48,14 +53,8 @@ import com.example.teabreak.data.TeaType
 import com.example.teabreak.data.Utils
 import com.example.teabreak.data.getName
 import com.example.teabreak.ui.AppViewModelProvider
-import com.example.teabreak.ui.home.TeaDetail
 import com.example.teabreak.ui.tea.TeaTimerViewModel
 import com.example.teabreak.ui.theme.TeaTimerTheme
-import android.Manifest
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.LineBreak
-import androidx.compose.ui.text.style.TextAlign
 
 class TeaTimerActivity : ComponentActivity() {
 
@@ -105,17 +104,15 @@ class TeaTimerActivity : ComponentActivity() {
             viewModel.setInitialUIState(teaId)
         }
 
-        val backgroundColor = Utils.getTeaBackgroundColor(teaType)
-
         setContent {
             TeaTimerTheme(teaType = teaType) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = backgroundColor
+                    color = MaterialTheme.colorScheme.primary
                 ) {
                     TeaTimer(
-                        viewModel,
+                        viewModel = viewModel,
                         onStart = { startTeaTimer() },
                         onClose = { cancelTeaTimer() }
                     )
@@ -260,9 +257,9 @@ fun TeaTimerTitle(teaTimerUiState: TeaTimerViewModel.TeaTimerUiState, modifier: 
             Text(
                 text = if (teaTimerUiState.timerState == TeaTimerViewModel.TimerState.STEEPING) "Now Brewing:" else teaTimerUiState.tea.type.getName(),
                 style = TextStyle(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7F),
                     fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight(300),
+                    fontWeight = FontWeight(600),
                     fontSize = TextUnit(14F, TextUnitType.Sp),
                     textAlign = TextAlign.Center,
                 )
@@ -270,7 +267,7 @@ fun TeaTimerTitle(teaTimerUiState: TeaTimerViewModel.TeaTimerUiState, modifier: 
             Text(
                 text = teaTimerUiState.tea.name,
                 style = TextStyle(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight(700),
                     fontSize = TextUnit(36F, TextUnitType.Sp),
                     textAlign = TextAlign.Center,
@@ -293,9 +290,29 @@ fun TeaTimerDetails(tea: Tea, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(50.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TeaDetail(iconRes = R.drawable.tea_bag, text = "${tea.scoopAmount} ${tea.scoopUnit.getName()}")
-            TeaDetail(iconRes = R.drawable.temperature, text = "${tea.temp}\u00B0")
+            TeaTimerDetail(iconRes = R.drawable.hourglass, text = "${tea.scoopAmount} ${tea.scoopUnit.getName()}")
+            TeaTimerDetail(iconRes = R.drawable.temperature, text = "${tea.temp}\u00B0")
         }
+    }
+}
+
+@Composable
+fun TeaTimerDetail(iconRes: Int, text: String) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier.size(14.dp),
+            painter = painterResource(id = iconRes),
+            contentDescription = "",
+            tint = MaterialTheme.colorScheme.onPrimary)
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontWeight = FontWeight(600),
+            fontSize = TextUnit(14F, TextUnitType.Sp)
+        )
     }
 }
 
@@ -308,14 +325,14 @@ fun TeaTimerClock(teaTimerUiState: TeaTimerViewModel.TeaTimerUiState, modifier: 
 
         CircularProgressIndicator(
             progress = (teaTimerUiState.timeRemaining.toFloat()/teaTimerUiState.steepTime.toFloat()),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimary,
             strokeWidth = 7.dp,
             modifier = Modifier.fillMaxSize()
         )
 
         Text(
             text = Utils.formatTime(teaTimerUiState.timeRemaining),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontWeight = FontWeight(900),
             fontSize = TextUnit(76F, TextUnitType.Sp)
         )
@@ -343,7 +360,7 @@ fun TeaTimerButton(
                     Icon(
                         Icons.Default.PlayArrow,
                         contentDescription = "Start Tea Timer",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(60.dp)
                     )
                 }
@@ -357,8 +374,7 @@ fun TeaTimerButton(
                     Icon(
                         Icons.Default.Close,
                         contentDescription = "Close Tea Timer",
-                        tint = if (teaTimerUiState.timerState == TeaTimerViewModel.TimerState.STEEPING)
-                            Color.White.copy(alpha = 0.5F) else Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(60.dp)
                     )
                 }
@@ -370,7 +386,7 @@ fun TeaTimerButton(
 @Preview
 @Composable
 fun TimerPreview() {
-    TeaTimerTheme(teaType = TeaType.OOLONG) {
+    TeaTimerTheme(teaType = TeaType.HERBAL) {
 
         val tea = Utils.getDefaultTeaObject(id = 1, "French Blue Lavender", TeaType.HERBAL)
 
@@ -379,7 +395,7 @@ fun TimerPreview() {
         Box(
             Modifier
                 .fillMaxSize()
-                .background(Utils.getTeaBackgroundColor(tea.type))
+                .background(MaterialTheme.colorScheme.primary)
         ) {
             TeaTimerTitle(
                 uiState,

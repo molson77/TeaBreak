@@ -36,23 +36,59 @@ val tb_theme_dark_tertiary_container = Color(0xFF3F51B5)
 val tb_theme_dark_headline_color = Color(0xFF1D1B20)
 val tb_theme_dark_body_color = Color(0x99000000)
 
-// TEA-SPECIFIC COLORS
-val tb_tea_green_bg = Color(0xFF9EB166)
-val tb_tea_black_bg = Color(0xFF392E36)
-val tb_tea_oolong_bg = Color(0xFF8F845C)
-val tb_tea_white_bg = Color(0xFFE2E2CB)
-val tb_tea_puerh_bg = Color(0xFF6B2828)
-val tb_tea_purple_bg = Color(0xFF5E4377)
-val tb_tea_rooibos_bg = Color(0xFFBE533F)
-val tb_tea_mate_bg = Color(0xFFD7D880)
-val tb_tea_herbal_bg = Color(0xFF667E53)
 
-val tb_tea_green_accent = Color(0xFFEFF7CD)
-val tb_tea_black_accent = Color(0xFFEBD9E0)
-val tb_tea_oolong_accent = Color(0xFFF8E9CB)
-val tb_tea_white_accent = Color(0xFF8F845C)
-val tb_tea_puerh_accent = Color(0xFFF0C3B4)
-val tb_tea_purple_accent = Color(0xFFE3C7F1)
-val tb_tea_rooibos_accent = Color(0xFFF8CFB6)
-val tb_tea_mate_accent = Color(0xFF7C7D28)
-val tb_tea_herbal_accent = Color(0xFFEFF7CD)
+// TEA-SPECIFIC COLORS
+
+// GREEN
+val green_light_primary = Color(0xFF9EB166)
+val green_light_on_primary = Color(0xFFFBFFEB)
+val green_light_secondary = Color(0xFFE5E9C9)
+val green_light_on_secondary = Color(0xFF3A5112)
+
+// BLACK
+val black_light_primary = Color(0xFF392E36)
+val black_light_on_primary = Color(0xFFFBEFF3)
+val black_light_secondary = Color(0xFF7B6374)
+val black_light_on_secondary = Color(0xFFFBEFF3)
+
+// OOLONG
+val oolong_light_primary = Color(0xFFB18A66)
+val oolong_light_on_primary = Color(0xFFF8F1E7)
+val oolong_light_secondary = Color(0xFFF7E7CD)
+val oolong_light_on_secondary = Color(0xFF663720)
+
+// WHITE
+val white_light_primary = Color(0xFFE2E2CB)
+val white_light_on_primary = Color(0xFF52431D)
+val white_light_secondary = Color(0xFFB8B393)
+val white_light_on_secondary = Color(0xFF52431D)
+
+// PU-ERH
+val puerh_light_primary = Color(0xFF6B2828)
+val puerh_light_on_primary = Color(0xFFFFF0EB)
+val puerh_light_secondary = Color(0xFFF0C3B4)
+val puerh_light_on_secondary = Color(0xFF441A1A)
+
+// PURPLE
+val purple_light_primary = Color(0xFF5E4377)
+val purple_light_on_primary = Color(0xFFFBEFF3)
+val purple_light_secondary = Color(0xFFE3C7F1)
+val purple_light_on_secondary = Color(0xFF3C3543)
+
+// ROOIBOS
+val rooibos_light_primary = Color(0xFFBE533F)
+val rooibos_light_on_primary = Color(0xFFF8F1E7)
+val rooibos_light_secondary = Color(0xFFF7E7CD)
+val rooibos_light_on_secondary = Color(0xFF652115)
+
+// MATE
+val mate_light_primary = Color(0xFFD7D880)
+val mate_light_on_primary = Color(0xFF333311)
+val mate_light_secondary = Color(0xFF7C7D28)
+val mate_light_on_secondary = Color(0xFFFEFFE5)
+
+// HERBAL
+val herbal_light_primary = Color(0xFF667E53)
+val herbal_light_on_primary = Color(0xFFFBFFEB)
+val herbal_light_secondary = Color(0xFFEFF7CD)
+val herbal_light_on_secondary = Color(0xFF3A5112)

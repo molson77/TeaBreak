@@ -20,8 +20,10 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,7 +40,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -65,6 +69,7 @@ import com.example.teabreak.data.getName
 import com.example.teabreak.ui.AppViewModelProvider
 import com.example.teabreak.ui.navigation.NavigationDestination
 import com.example.teabreak.ui.theme.TeaBreakTheme
+import com.example.teabreak.ui.theme.TeaTheme
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -74,7 +79,6 @@ object HomeDestination : NavigationDestination {
 /**
  * Entry route for Home screen
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
@@ -122,7 +126,7 @@ private fun TeaBreakList(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
         items(items = teaList.sortedBy { it.type }) { tea ->
-            TeaBreakTea(
+            NewTeaBreakTea(
                 tea = tea,
                 onTeaClick = onTeaClick,
                 onTeaLongClick = onTeaLongClick,
@@ -140,61 +144,74 @@ private fun TeaBreakList(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun TeaBreakTea(
+private fun NewTeaBreakTea(
     tea: Tea, onTeaClick: (Tea) -> Unit, onTeaLongClick: (Tea) -> Unit, modifier: Modifier = Modifier
 ) {
 
-    Card(
-        modifier = modifier.combinedClickable(
-            onClick = { onTeaClick(tea) },
-            onLongClick = { onTeaLongClick(tea) }
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = Utils.getTeaBackgroundColor(tea.type)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+    TeaTheme(teaType = tea.type) {
+        Card(
+            modifier = modifier.combinedClickable(
+                onClick = { onTeaClick(tea) },
+                onLongClick = { onTeaLongClick(tea) }
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .fillMaxWidth(),
             ) {
                 Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = tea.name,
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight(600),
-                        fontSize = TextUnit(25F, TextUnitType.Sp)
+                        fontSize = TextUnit(20F, TextUnitType.Sp)
                     )
-                    Text(
-                        text = tea.type.getName(),
-                        color = Color.White,
-                        fontWeight = FontWeight(300),
-                        fontSize = TextUnit(14F, TextUnitType.Sp),
-                        fontStyle = FontStyle.Italic
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.tea_leaf),
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7F),
+                            modifier = Modifier.size(13.dp)
+                        )
+                        Text(
+                            text = tea.type.getName(),
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7F),
+                            fontWeight = FontWeight(600),
+                            fontSize = TextUnit(16F, TextUnitType.Sp),
+                            fontStyle = FontStyle.Italic
+                        )
+                    }
                 }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                TeaDetail(iconRes = R.drawable.tea_bag, text = "${tea.scoopAmount} ${tea.scoopUnit.getName()}")
-                TeaDetail(iconRes = R.drawable.alarm_clock, text = Utils.formatTime(tea.steepSeconds))
-                TeaDetail(iconRes = R.drawable.temperature, text = "${tea.temp}\u00B0")
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.secondary)
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(IntrinsicSize.Min),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TeaDetail(iconRes = R.drawable.teacup, text = "${tea.scoopAmount} ${tea.scoopUnit.getName()}")
+                        TeaDetail(iconRes = R.drawable.hourglass, text = Utils.formatTime(tea.steepSeconds))
+                        TeaDetail(iconRes = R.drawable.temperature, text = "${tea.temp}\u00B0")
+                    }
+                }
             }
         }
     }
@@ -203,17 +220,19 @@ private fun TeaBreakTea(
 @Composable
 fun TeaDetail(iconRes: Int, text: String) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            modifier = Modifier.size(20.dp),
+            modifier = Modifier.size(14.dp),
             painter = painterResource(id = iconRes),
             contentDescription = "",
-            tint = Color.White)
+            tint = MaterialTheme.colorScheme.onSecondary)
         Text(
             text = text,
-            color = Color.White
+            color = MaterialTheme.colorScheme.onSecondary,
+            fontWeight = FontWeight(600),
+            fontSize = TextUnit(14F, TextUnitType.Sp)
         )
     }
 }

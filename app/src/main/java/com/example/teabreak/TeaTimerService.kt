@@ -182,7 +182,7 @@ class TeaTimerService : Service() {
             )
             .setColorized(true)
             .setColor(Utils.getTeaBackgroundColor(teaType).toArgb())
-            .setSmallIcon(R.drawable.tea_bag)
+            .setSmallIcon(R.drawable.teacup)
             .setSilent(true)
             .setContentIntent(notificationPendingIntent)
             .setAutoCancel(false)
@@ -210,7 +210,7 @@ class TeaTimerService : Service() {
             .setOngoing(false)
             .setColorized(true)
             .setColor(Utils.getTeaBackgroundColor(teaType).toArgb())
-            .setSmallIcon(R.drawable.tea_bag)
+            .setSmallIcon(R.drawable.teacup)
             .setOnlyAlertOnce(false)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setSound(alarmSound)
@@ -219,8 +219,6 @@ class TeaTimerService : Service() {
             .setAutoCancel(true)
             .build()
     }
-
-
 
     private fun deleteBrewingNotification() {
         notificationManager.cancel(TIMER_NOTIFICATION_ID)

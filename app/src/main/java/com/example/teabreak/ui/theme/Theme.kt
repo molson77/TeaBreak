@@ -22,6 +22,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
@@ -45,6 +46,69 @@ private val DarkColorScheme = darkColorScheme(
     secondary = tb_theme_dark_secondary,
     secondaryContainer = tb_theme_dark_secondary_container,
     tertiaryContainer = tb_theme_dark_tertiary_container
+)
+
+private val GreenTeaColorScheme = lightColorScheme(
+    primary = green_light_primary,
+    onPrimary = green_light_on_primary,
+    secondary = green_light_secondary,
+    onSecondary = green_light_on_secondary
+)
+
+private val BlackTeaColorScheme = lightColorScheme(
+    primary = black_light_primary,
+    onPrimary = black_light_on_primary,
+    secondary = black_light_secondary,
+    onSecondary = black_light_on_secondary
+)
+
+private val OolongTeaColorScheme = lightColorScheme(
+    primary = oolong_light_primary,
+    onPrimary = oolong_light_on_primary,
+    secondary = oolong_light_secondary,
+    onSecondary = oolong_light_on_secondary
+)
+
+private val WhiteTeaColorScheme = lightColorScheme(
+    primary = white_light_primary,
+    onPrimary = white_light_on_primary,
+    secondary = white_light_secondary,
+    onSecondary = white_light_on_secondary
+)
+
+private val PuerhTeaColorScheme = lightColorScheme(
+    primary = puerh_light_primary,
+    onPrimary = puerh_light_on_primary,
+    secondary = puerh_light_secondary,
+    onSecondary = puerh_light_on_secondary
+)
+
+private val PurpleTeaColorScheme = lightColorScheme(
+    primary = purple_light_primary,
+    onPrimary = purple_light_on_primary,
+    secondary = purple_light_secondary,
+    onSecondary = purple_light_on_secondary
+)
+
+private val RooibosTeaColorScheme = lightColorScheme(
+    primary = rooibos_light_primary,
+    onPrimary = rooibos_light_on_primary,
+    secondary = rooibos_light_secondary,
+    onSecondary = rooibos_light_on_secondary
+)
+
+private val MateTeaColorScheme = lightColorScheme(
+    primary = mate_light_primary,
+    onPrimary = mate_light_on_primary,
+    secondary = mate_light_secondary,
+    onSecondary = mate_light_on_secondary
+)
+
+private val HerbalTeaColorScheme = lightColorScheme(
+    primary = herbal_light_primary,
+    onPrimary = herbal_light_on_primary,
+    secondary = herbal_light_secondary,
+    onSecondary = herbal_light_on_secondary
 )
 
 @Composable
@@ -82,25 +146,57 @@ fun TeaTimerTheme(
     teaType: TeaType,
     content: @Composable () -> Unit
 ) {
-    val backgroundColor = Utils.getTeaBackgroundColor(teaType)
 
-    val colorScheme = when {
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val teaColorScheme = when(teaType) {
+        TeaType.GREEN -> GreenTeaColorScheme
+        TeaType.BLACK -> BlackTeaColorScheme
+        TeaType.OOLONG -> OolongTeaColorScheme
+        TeaType.WHITE -> WhiteTeaColorScheme
+        TeaType.PU_ERH -> PuerhTeaColorScheme
+        TeaType.PURPLE -> PurpleTeaColorScheme
+        TeaType.ROOIBOS -> RooibosTeaColorScheme
+        TeaType.MATE -> MateTeaColorScheme
+        TeaType.HERBAL -> HerbalTeaColorScheme
     }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = backgroundColor.toArgb()
-            window.navigationBarColor = backgroundColor.toArgb()
+            window.statusBarColor = teaColorScheme.primary.toArgb()
+            window.navigationBarColor = teaColorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = false
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
+    MaterialTheme (
+        colorScheme = teaColorScheme,
         shapes = Shapes,
         content = content
     )
+}
+
+@Composable
+fun TeaTheme(
+    teaType: TeaType,
+    content: @Composable () -> Unit
+) {
+    val teaColorScheme = when(teaType) {
+        TeaType.GREEN -> GreenTeaColorScheme
+        TeaType.BLACK -> BlackTeaColorScheme
+        TeaType.OOLONG -> OolongTeaColorScheme
+        TeaType.WHITE -> WhiteTeaColorScheme
+        TeaType.PU_ERH -> PuerhTeaColorScheme
+        TeaType.PURPLE -> PurpleTeaColorScheme
+        TeaType.ROOIBOS -> RooibosTeaColorScheme
+        TeaType.MATE -> MateTeaColorScheme
+        TeaType.HERBAL -> HerbalTeaColorScheme
+    }
+
+    MaterialTheme (
+        colorScheme = teaColorScheme,
+        shapes = Shapes,
+        content = content
+    )
+
 }

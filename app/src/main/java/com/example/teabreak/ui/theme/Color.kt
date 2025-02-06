@@ -25,7 +25,7 @@ val tb_theme_light_secondary = Color(0xFFA0A0A0)
 val tb_theme_light_secondary_container = Color(0x1AD9D9D9)
 val tb_theme_light_tertiary_container = Color(0xFF009688)
 val tb_theme_light_headline_color = Color(0xFF2A2E1C)
-val tb_theme_light_body_color = Color(0x99000000)
+val tb_theme_light_body_color = Color(0xFF5B5B5B)
 
 // DARK
 val tb_theme_dark_primary = Color(0xFF585641)

@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,6 +55,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -104,12 +106,16 @@ fun HomeScreen(
 private fun HomeBody(
     teaList: List<Tea>, onTeaClick: (Tea) -> Unit, onTeaLongClick: (Tea) -> Unit, modifier: Modifier = Modifier
 ) {
-    TeaBreakList(
-        modifier = modifier,
-        teaList = teaList,
-        onTeaClick = { onTeaClick(it) },
-        onTeaLongClick = { onTeaLongClick(it) }
-    )
+    if(teaList.isEmpty()) {
+        TeaBreakNoTea(modifier)
+    } else {
+        TeaBreakList(
+            modifier = modifier,
+            teaList = teaList,
+            onTeaClick = { onTeaClick(it) },
+            onTeaLongClick = { onTeaLongClick(it) }
+        )
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -138,6 +144,43 @@ private fun TeaBreakList(
         }
         item { 
             Spacer(modifier = Modifier.height(80.dp))
+        }
+    }
+}
+
+@Composable
+private fun TeaBreakNoTea(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                modifier = Modifier.size(60.dp),
+                painter = painterResource(id = R.drawable.teacupandbag),
+                contentDescription = "",
+                tint = MaterialTheme.colorScheme.primary)
+            Text(
+                text = "Where's the Tea?",
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.W600,
+                modifier = Modifier
+            )
+            Text(
+                text = "Add your favorite tea recipes by\ntapping + above!",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+                fontWeight = FontWeight.W500,
+                textAlign = TextAlign.Center,
+                lineHeight = TextUnit(20F, TextUnitType.Sp),
+                modifier = Modifier
+            )
         }
     }
 }
@@ -253,18 +296,19 @@ fun TeaBreakTeaPreview() {
                 )
             }
         ) {
+            val teaList = listOf(
+                Utils.getDefaultTeaObject(id = 1, "English Breakfast", TeaType.BLACK),
+                Utils.getDefaultTeaObject(id = 0, "Jasmine Pearls", TeaType.GREEN),
+                Utils.getDefaultTeaObject(id = 3, "African Autumn", TeaType.ROOIBOS),
+                Utils.getDefaultTeaObject(id = 2, "High Mountain", TeaType.OOLONG),
+                Utils.getDefaultTeaObject(id = 7, "Royal Wedding", TeaType.WHITE),
+                Utils.getDefaultTeaObject(id = 5, "Old Tree", TeaType.PU_ERH),
+                Utils.getDefaultTeaObject(id = 4, "Kenyan Premium", TeaType.PURPLE),
+                Utils.getDefaultTeaObject(id = 6, "Yerba Mate", TeaType.MATE),
+            )
             HomeBody(
                 modifier = Modifier.padding(it),
-                teaList = listOf(
-                    Utils.getDefaultTeaObject(id = 1, "English Breakfast", TeaType.BLACK),
-                    Utils.getDefaultTeaObject(id = 0, "Jasmine Pearls", TeaType.GREEN),
-                    Utils.getDefaultTeaObject(id = 3, "African Autumn", TeaType.ROOIBOS),
-                    Utils.getDefaultTeaObject(id = 2, "High Mountain", TeaType.OOLONG),
-                    Utils.getDefaultTeaObject(id = 7, "Royal Wedding", TeaType.WHITE),
-                    Utils.getDefaultTeaObject(id = 5, "Old Tree", TeaType.PU_ERH),
-                    Utils.getDefaultTeaObject(id = 4, "Kenyan Premium", TeaType.PURPLE),
-                    Utils.getDefaultTeaObject(id = 6, "Yerba Mate", TeaType.MATE),
-                ),
+                teaList = listOf(),
                 onTeaClick = {},
                 onTeaLongClick = {}
             )

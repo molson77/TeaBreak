@@ -37,7 +37,8 @@ private val LightColorScheme = lightColorScheme(
     background = tb_theme_light_background,
     secondary = tb_theme_light_secondary,
     secondaryContainer = tb_theme_light_secondary_container,
-    tertiaryContainer = tb_theme_light_tertiary_container
+    tertiaryContainer = tb_theme_light_tertiary_container,
+    onBackground = tb_theme_light_body_color
 )
 
 private val DarkColorScheme = darkColorScheme(

@@ -37,7 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -290,7 +289,7 @@ fun TeaTimerDetails(tea: Tea, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(50.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TeaTimerDetail(iconRes = R.drawable.hourglass, text = "${tea.scoopAmount} ${tea.scoopUnit.getName()}")
+            TeaTimerDetail(iconRes = R.drawable.teacup, text = "${tea.scoopAmount} ${tea.scoopUnit.getName()}")
             TeaTimerDetail(iconRes = R.drawable.temperature, text = "${tea.temp}\u00B0")
         }
     }
